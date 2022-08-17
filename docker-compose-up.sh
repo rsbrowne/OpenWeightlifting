@@ -3,7 +3,7 @@
 declare -A arr
 
 arr["sharefolder-backend"]="${PWD}/backend"
-arr["sharefolder-client"]="${PWD}/client"
+arr["sharefolder-frontend"]="${PWD}/frontend"
 
 for key in ${!arr[@]}; do
     echo ${key} ${arr[${key}]}
