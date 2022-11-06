@@ -5,6 +5,7 @@ import (
 	"backend/structs"
 	"backend/utilities"
 	"sort"
+	"time"
 )
 
 //FilterFederation - Returns a slice of structs relating to the selected federation
@@ -37,14 +38,25 @@ func SortTotal(sliceStructs []structs.Entry) {
 	})
 }
 
-func TopPerformance(bigData []structs.Entry, sortBy string) (finalData []structs.Entry) {
+// SortDate Ascending order by lift date
+func SortDate(liftData []structs.Entry) []structs.Entry {
+	const rfc3339partial string = "T15:04:05Z" // todo - manually subscribe to the RFC3339 string instead (?)
+	sort.Slice(liftData, func(i, j int) bool {
+		liftI, _ := time.Parse(time.RFC3339, liftData[i].Date+rfc3339partial)
+		liftJ, _ := time.Parse(time.RFC3339, liftData[j].Date+rfc3339partial)
+		return liftI.Before(liftJ)
+	})
+	return liftData
+}
+
+func TopPerformance(bigData []structs.Entry, sortBy string, maxSize int) (finalData []structs.Entry) {
 	switch sortBy {
 	case enum.Total:
 		SortTotal(bigData)
 	case enum.Sinclair:
 		SortSinclair(bigData)
 	}
-	bigData = dropBombs(bigData)
+	//bigData = dropBombs(bigData) may need this in the future
 	var names []string
 	var position []int
 	for i, d := range bigData {
@@ -52,9 +64,12 @@ func TopPerformance(bigData []structs.Entry, sortBy string) (finalData []structs
 			position = append(position, i)
 			names = append(names, d.Name)
 		}
+		if len(names) == maxSize {
+			break
+		}
 	}
-	for _, position := range position {
-		finalData = append(finalData, bigData[position])
+	for _, posInt := range position {
+		finalData = append(finalData, bigData[posInt])
 	}
 	return
 }

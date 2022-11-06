@@ -29,6 +29,20 @@ func getSearchName(c *gin.Context) {
 	c.JSON(http.StatusOK, results)
 }
 
+func postLifterRecord(c *gin.Context) {
+	lifterSearch := structs.NameSearch{}
+	if err := c.BindJSON(&lifterSearch); err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+	}
+	lifterDetails := lifter.FetchLifts(lifterSearch, &processedLeaderboard)
+	lifterDetails.Lifts = dbtools.SortDate(lifterDetails.Lifts)
+	if len(lifterDetails.Lifts) != 0 {
+		c.JSON(http.StatusOK, lifterDetails)
+	} else if len(lifterDetails.Lifts) == 0 {
+		c.JSON(http.StatusNoContent, nil)
+	}
+}
+
 //Main leaderboard function
 func postLeaderboard(c *gin.Context) {
 	body := structs.LeaderboardPayload{}
@@ -50,14 +64,17 @@ func buildDatabase() {
 	log.Println("buildDatabase called...")
 	bigData := dbtools.CollateAll()
 	male, female, _ := dbtools.SortGender(bigData) // Throwaway the unknown genders as they're likely really young kids
+	const maxSize int = 1000
 	leaderboardTotal := &structs.LeaderboardData{
 		AllNames:        append(male.ProcessNames(), female.ProcessNames()...),
-		MaleTotals:      dbtools.TopPerformance(male.Lifts, enum.Total),
-		FemaleTotals:    dbtools.TopPerformance(female.Lifts, enum.Total),
-		MaleSinclairs:   dbtools.TopPerformance(male.Lifts, enum.Sinclair),
-		FemaleSinclairs: dbtools.TopPerformance(female.Lifts, enum.Sinclair),
+		AllData:         append(male.Lifts, female.Lifts...),
+		MaleTotals:      dbtools.TopPerformance(male.Lifts, enum.Total, maxSize),
+		FemaleTotals:    dbtools.TopPerformance(female.Lifts, enum.Total, maxSize),
+		MaleSinclairs:   dbtools.TopPerformance(male.Lifts, enum.Sinclair, maxSize),
+		FemaleSinclairs: dbtools.TopPerformance(female.Lifts, enum.Sinclair, maxSize),
 	}
 	processedLeaderboard = *leaderboardTotal
+	log.Println("Database READY")
 }
 
 func CORSConfig(localEnv bool) cors.Config {
@@ -86,6 +103,7 @@ func main() {
 	r.GET("test", getTest)
 	r.POST("leaderboard", postLeaderboard)
 	r.GET("search", getSearchName)
+	r.POST("lifter", postLifterRecord)
 	err := r.Run()
 	if err != nil {
 		log.Fatal("Failed to run server")
