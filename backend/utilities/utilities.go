@@ -13,6 +13,16 @@ func Float(preFloatStr string) (retFloat float32) {
 	return
 }
 
+//MapContains - Returns true if the map/dict matches the primary/index data
+func MapContains(StrQuery string, mapData map[string]string) bool {
+	for index, _ := range mapData {
+		if index == StrQuery {
+			return true
+		}
+	}
+	return false
+}
+
 //Contains - Returns true if a substring within a string exists
 func Contains(sl []string, name string) bool {
 	for _, value := range sl {
@@ -23,12 +33,9 @@ func Contains(sl []string, name string) bool {
 	return false
 }
 
-// LoadCsvFile Returns the contents of a CSV file as a nested slice with an option to skip the header line but in a lazy AF way
-func LoadCsvFile(file io.Reader, skipHeader bool) (csvContents [][]string) {
+// LoadCsvFile Returns the contents of a CSV file as a nested slice minus the header line
+func LoadCsvFile(file io.Reader) (csvContents [][]string) {
 	reader := csv.NewReader(file)
 	csvContents, _ = reader.ReadAll()
-	if skipHeader {
-		return csvContents[1:]
-	}
-	return csvContents
+	return csvContents[1:]
 }

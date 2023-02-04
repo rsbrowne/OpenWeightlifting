@@ -31,7 +31,6 @@ type LifterHistory struct {
 
 type LeaderboardData struct {
 	AllNames        []string
-	AllData         []Entry
 	MaleTotals      []Entry
 	FemaleTotals    []Entry
 	MaleSinclairs   []Entry
@@ -66,4 +65,5 @@ type Entry struct {
 	Total      float32 `json:"total"`
 	Sinclair   float32 `json:"sinclair"`
 	Federation string  `json:"country"`
+	Instagram  string  `json:"instagram"`
 }
