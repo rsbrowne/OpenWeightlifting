@@ -7,7 +7,7 @@ on:
     branches: [ "development", "master"]
 
 jobs:
-  build:
+  gobuild:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -15,7 +15,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
-        go-version: 1.18
+        go-version: 1.20.2
 
     - name: Build
       run: |
@@ -25,4 +25,11 @@ jobs:
     - name: Test
       run: |
         cd backend/
-        go test -v
+        go test -coverprofile=coverage.txt ./...
+
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        files: /backend/coverage.txt
+        verbose: true
+        token: ${{ secrets.CODECOV_TOKEN }}
