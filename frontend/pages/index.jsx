@@ -8,20 +8,20 @@ import { Filters } from '../components/filters/index.component'
 import { LifterGraph } from '../components/lifter-graph/index.component'
 
 const fetchLifterData = async (
-  gender = 'male',
   start = 0,
   stop = 500,
   sortby = 'total',
   federation = 'allfeds',
-  weightclass = 'allcats'
+  weightclass = 'MALL',
+  year = 69
 ) => {
   const bodyContent = JSON.stringify({
-    gender,
     start,
     stop,
     sortby,
     federation,
-    weightclass
+    weightclass,
+    year,
   })
 
   const res = await fetch(`${process.env.API}/leaderboard`, {
@@ -66,10 +66,10 @@ const lightTheme = createTheme({
 })
 
 const Home = ({ data }) => {
-  const [currentGender, setCurrentGender] = useState('male')
   const [sortBy, setSortBy] = useState('total')
   const [federation, setFederation] = useState('allfeds')
-  const [weightclass, setWeightclass] = useState('allcats')
+  const [weightclass, setWeightclass] = useState('MALL')
+  const [year, setYear] = useState(69)
   const [currentLifterList, setCurrentLifterList] = useState(data)
   const [currentLifterName, setCurrentLifterName] = useState()
   const [showLifterGraph, setShowLifterGraph] = useState(false)
@@ -80,25 +80,25 @@ const Home = ({ data }) => {
   useEffect(() => {
     async function callFetchLisfterData() {
       setCurrentLifterList(
-        await fetchLifterData(currentGender, 0, 500, sortBy, federation, weightclass),
+        await fetchLifterData(0, 500, sortBy, federation, weightclass, parseInt(year)),
       )
     }
 
     callFetchLisfterData()
-  }, [currentGender, sortBy, federation, weightclass])
+  }, [sortBy, federation, weightclass, year])
 
   const handleGenderChange = newFilter => {
     const { type, value } = newFilter
     console.log(type, value)
     switch (type) {
-      case 'gender':
-        setCurrentGender(value)
-        break
       case 'sortBy':
         setSortBy(value)
         break
       case 'weightclass':
         setWeightclass(value)
+        break
+      case 'year':
+        setYear(value)
         break
       default:
         setFederation(value)
@@ -121,11 +121,11 @@ const Home = ({ data }) => {
       <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
         <CssBaseline />
         <Filters
-          currentGender={currentGender}
           sortBy={sortBy}
           federation={federation}
           handleGenderChange={handleGenderChange}
           weightClass={weightclass}
+          year={year}
         />
         {currentLifterList && <DataTable lifters={currentLifterList} openLifterGraphHandler={openLifterGraphHandler} />}
       </ThemeProvider>
