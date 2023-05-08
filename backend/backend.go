@@ -5,6 +5,7 @@ import (
 	"backend/events"
 	"backend/lifter"
 	"backend/structs"
+	jsoniter "github.com/json-iterator/go"
 	"log"
 	"net/http"
 	"os"
@@ -28,8 +29,7 @@ func getTest(c *gin.Context) {
 func getSearchName(c *gin.Context) {
 	if len(c.Query("name")) >= 3 {
 		search := structs.NameSearch{NameStr: c.Query("name")}
-		suggestions := lifter.NameSearch(search.NameStr, &processedLeaderboard.AllNames)
-		results := structs.NameSearchResults{Names: processedLeaderboard.FetchNames(suggestions)}
+		results := structs.NameSearchResults{Names: lifter.NameSearch(search.NameStr, &processedLeaderboard.AllTotals)}
 		c.JSON(http.StatusOK, results)
 	}
 }
@@ -52,6 +52,10 @@ func postLifterRecord(c *gin.Context) {
 	if err := c.BindJSON(&lifterSearch); err != nil {
 		_ = c.AbortWithError(http.StatusBadRequest, err)
 	}
+	// dumb logging so datadog picks it up
+	reqBody, _ := jsoniter.MarshalToString(lifterSearch)
+	log.Println(reqBody)
+
 	lifterDetails := lifter.FetchLifts(lifterSearch, &processedLeaderboard)
 	lifterDetails.Lifts = dbtools.SortDate(lifterDetails.Lifts)
 	finalPayload := lifterDetails.GenerateChartData()
@@ -70,8 +74,12 @@ func postLeaderboard(c *gin.Context) {
 		log.Println(abortErr)
 		return
 	}
-	sexLeaderboard := processedLeaderboard.Query(body.SortBy, dbtools.WeightClassList[body.WeightClass].Gender)
-	fedData := dbtools.Filter(*sexLeaderboard, body, dbtools.WeightClassList[body.WeightClass], *lifterData)
+	// dumb logging so datadog picks it up
+	reqBody, _ := jsoniter.MarshalToString(body)
+	log.Println(reqBody)
+
+	leaderboardData := processedLeaderboard.Select(body.SortBy) // Selects either total or sinclair sorted leaderboard
+	fedData := dbtools.Filter(*leaderboardData, body, dbtools.WeightClassList[body.WeightClass], *lifterData)
 	c.JSON(http.StatusOK, fedData)
 }
 
