@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import Image from 'next/image'
 import {
   Navbar,
@@ -14,7 +15,6 @@ import { MdOutlinePersonSearch } from 'react-icons/md'
 import { FiHome } from 'react-icons/fi'
 
 import Logo from '../public/OWL-logo.png'
-import { useState } from 'react'
 
 const HeaderBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -23,7 +23,7 @@ const HeaderBar = () => {
     <Navbar isBordered className="py-2">
       <NavbarBrand>
         <Link href="/">
-          <Image src={Logo} alt="OpenWeightlifting" width={130} />
+          <Image src={Logo} alt="OpenWeightlifting" width={130} priority />
         </Link>
       </NavbarBrand>
 
