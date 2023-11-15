@@ -1,11 +1,10 @@
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
-import { LifterGraph } from "@/components/liftergraph"
-import { HistoryTable } from "@/components/historytable"
-import fetchLifterHistory from '../api/fetchLifterHistory/fetchLifterHistory'
-import { LifterHistory } from "@/api/fetchLifterHistory/fetchLifterHistoryTypes"
-import HeaderBar from "@/layouts/head";
+import { LifterGraph } from "components/liftergraph"
+import { HistoryTable } from "components/historytable"
+import fetchLifterHistory from 'api/fetchLifterHistory/fetchLifterHistory'
+import { LifterHistory } from "api/fetchLifterHistory/fetchLifterHistoryTypes"
 
 function Lifter() {
   const router = useRouter()
@@ -31,7 +30,6 @@ function Lifter() {
 
   return (
     <div>
-      <HeaderBar />
       <center>
         <h1>{lifterHistory['name']}</h1>
       </center>

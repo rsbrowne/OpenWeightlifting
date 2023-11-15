@@ -7,7 +7,6 @@ import {
   SelectItem,
 } from '@nextui-org/react'
 import { useState } from 'react'
-import HeaderBar from '@/layouts/head'
 
 const Coefficients = {
   AMale2009: 0.784780654,
@@ -129,7 +128,6 @@ function Sinclair() {
 
   return (
     <>
-      <HeaderBar />
       <div className="flex justify-center mt-4">
         <div className="max-w-lg mx-4 space-y-4">
           <p>

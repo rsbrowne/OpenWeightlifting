@@ -1,17 +1,14 @@
 import { useState, useEffect } from 'react'
 import { Button, Modal, ModalContent, ModalHeader } from '@nextui-org/react'
 
-import HeaderBar from '@/layouts/head'
+import { DataTable } from 'components/datatable'
+import { Filters } from 'components/filters'
+import { LifterGraph } from 'components/liftergraph'
 
-import { DataTable } from '@/components/datatable'
-import { Filters } from '@/components/filters'
-import { LifterGraph } from '@/components/liftergraph'
-
-import fetchLifterData from '@/api/fetchLifterData/fetchLifterData'
-import fetchLifterGraphData from '@/api/fetchLifterGraphData/fetchLifterGraphData'
-
-import { LifterResult } from '@/api/fetchLifterData/fetchLifterDataTypes'
-import { LifterChartData } from '@/api/fetchLifterGraphData/fetchLifterGraphDataTypes'
+import fetchLifterData from 'api/fetchLifterData/fetchLifterData'
+import fetchLifterGraphData from 'api/fetchLifterGraphData/fetchLifterGraphData'
+import { LifterResult } from 'api/fetchLifterData/fetchLifterDataTypes'
+import { LifterChartData } from 'api/fetchLifterGraphData/fetchLifterGraphDataTypes'
 
 // I fucking hate this shit
 // todo: fix this fucking shit
@@ -95,7 +92,6 @@ function Home({ data }: { data: LifterResult[] }) {
 
   return (
     <div className={'flex flex-col content-center'}>
-      <HeaderBar />
       <Filters
         sortBy={sortBy}
         federation={federation}

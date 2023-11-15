@@ -5,7 +5,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@nextui-org/react'
-import HeaderBar from '@/layouts/head'
 import { useState } from 'react'
 
 type RegistrationForm = {
@@ -110,7 +109,6 @@ function League() {
 
   return (
     <>
-      <HeaderBar />
       <div className="flex justify-center mt-4 mb-8">
         <div className="w-4/5 md:w-2/3 xl:w-1/2 ">
           <div className="mb-6">

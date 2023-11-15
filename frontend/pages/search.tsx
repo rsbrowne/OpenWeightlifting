@@ -1,8 +1,7 @@
 import { useState } from 'react'
-import { LifterSearchList } from "@/api/fetchLifterNames/fetchLifterNamesTypes";
 
-import HeaderBar from '@/layouts/head'
-import fetchLifterNames from "@/api/fetchLifterNames/fetchLifterNames";
+import { LifterSearchList } from "api/fetchLifterNames/fetchLifterNamesTypes";
+import fetchLifterNames from "api/fetchLifterNames/fetchLifterNames";
 
 import { Input, Listbox, ListboxItem, ListboxSection } from '@nextui-org/react'
 
@@ -15,7 +14,6 @@ function SearchPage() {
 
   return (
     <>
-      <HeaderBar />
       <div className="flex justify-center mt-4">
         <div className="max-w-lg mx-4 space-y-4">
       <center>

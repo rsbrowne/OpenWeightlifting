@@ -16,7 +16,7 @@ import { FiHome } from 'react-icons/fi'
 
 import Logo from '../public/OWL-logo.png'
 
-const HeaderBar = () => {
+const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
@@ -71,4 +71,4 @@ const HeaderBar = () => {
   )
 }
 
-export default HeaderBar
+export default Header
